@@ -1,10 +1,13 @@
 #include <stdio.h>
-#include "server_for_web.h"
+#include "header/client_info.h"
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+
+int start_server_for_web();
+
 int main()
 {
 	int pid;
@@ -12,14 +15,19 @@ int main()
 	// Web Server로 부터 명령 대기
 	if ((pid = fork()) > 0)
 	{
-				
+		start_server();		
 	}
+	else if (pid == 0)
+	{
+		
+	}
+	
 
 
 	
 }
 
-int start_server_for_web()
+int start_server()
 {
 	client_info *client;
 
@@ -61,3 +69,27 @@ int start_server_for_web()
 	{
 		client = (client_info *)malloc(sizeof(client_info));
 
+		client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &len);
+		if (client_fd < 0)
+		{
+			printf("Server_For_Web : Accept failed.\n");
+			continue;
+		}
+		printf("Server_For_Web : Connected with Web Server.\n");
+		
+		size = read(client_fd, &(client->type), sizeof(uint8_t));
+		size = read(client_fd, &(client->id_length), sizeof(uint8_t));
+		
+		client->id = (char *)malloc(id_length);
+		
+		size = read(client_fd, client->id, client->id_length);
+		size = read(client_fd, &(client->ip_length), sizeof(uint8_t));
+		
+		client->ip = (char *)malloc(ip_length);
+
+		size = read(client_fd, client->ip, client->ip_length);
+		
+		close(client_fd);		
+	}
+	
+}
