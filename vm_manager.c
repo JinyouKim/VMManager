@@ -76,16 +76,19 @@ int start_server()
 			continue;
 		}
 		printf("Server_For_Web : Connected with Web Server.\n");
-		
+
+		size = read(client_fd, &(client->command), sizeof(uint8_t));
 		size = read(client_fd, &(client->type), sizeof(uint8_t));
+		size = read(client_fd, &(client->width), sizeof(uint8_t));
+		size = read(client_fd, &(client->height), sizeof(uint8_t));
 		size = read(client_fd, &(client->id_length), sizeof(uint8_t));
 		
-		client->id = (char *)malloc(id_length);
+		client->id = (char *)malloc(client->id_length);
 		
 		size = read(client_fd, client->id, client->id_length);
 		size = read(client_fd, &(client->ip_length), sizeof(uint8_t));
 		
-		client->ip = (char *)malloc(ip_length);
+		client->ip = (char *)malloc(client->ip_length);
 
 		size = read(client_fd, client->ip, client->ip_length);
 		
