@@ -7,6 +7,7 @@
 #include <netinet/in.h>
 
 int start_server_for_web();
+int start_vm(client_info *client);
 
 int main()
 {
@@ -95,4 +96,9 @@ int start_server()
 		close(client_fd);		
 	}
 	
+}
+
+int start_vm(client_info *client)
+{
+	system("qemu --enable-kvm -sdl -m 1024 -cpu kvm64 -vga std -soundhw es1370 -usbdevice tablet -hda androidx86.img");
 }
